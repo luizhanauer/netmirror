@@ -1,0 +1,37 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'netmirror/**' # Só roda se houver mudança no frontend
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Vue App
+        working-directory: ./netmirror
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy Frontend to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./netmirror/dist
+          publish_branch: gh-pages
+          keep_files: true # IMPORTANTE: Mantém a pasta /api gerada pelo outro workflow

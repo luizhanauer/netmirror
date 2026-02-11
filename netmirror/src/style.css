@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  /* Definição de Cores Customizadas */
+  --color-primary: #10b981; /* Emerald 500 */
+  --color-dark: #0f172a;    /* Slate 900 */
+  --color-surface: #1e293b; /* Slate 800 */
+  
+  /* Definição de Fontes */
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Configurações Globais */
+body {
+  background-color: var(--color-dark);
+  color: #f3f4f6;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar Customizada */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* --- CLASSES QUE ESTAVAM NO APP.VUE --- */
+/* Como estão aqui, elas conseguem acessar o --color-surface */
+
+.stat-box {
+  @apply bg-surface p-4 rounded border border-gray-700 text-center flex flex-col justify-center;
+}
+
+.stat-label {
+  @apply text-xs text-gray-400 uppercase tracking-wider mb-1 font-semibold;
+}
+
+.stat-value {
+  @apply text-3xl font-bold;
+}
+
+.toggle-item {
+  @apply flex items-center gap-2 cursor-pointer select-none hover:opacity-80 transition-opacity;
+}
