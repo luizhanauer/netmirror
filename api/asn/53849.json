@@ -1,0 +1,1 @@
+[{"registry":"arin","type":"ipv4","start":"45.59.108.0","prefix":22,"cidr":"45.59.108.0/22","cc":"US","date":"20221219"},{"registry":"arin","type":"ipv4","start":"209.209.64.0","prefix":22,"cidr":"209.209.64.0/22","cc":"US","date":"20210421"},{"registry":"arin","type":"ipv6","start":"2604:1a60::","prefix":32,"cidr":"2604:1a60::/32","cc":"US","date":"20250801"}]

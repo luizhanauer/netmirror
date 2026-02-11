@@ -1,0 +1,1 @@
+[{"registry":"lacnic","type":"ipv4","start":"45.180.120.0","prefix":22,"cidr":"45.180.120.0/22","cc":"BZ","date":"20190710"},{"registry":"lacnic","type":"ipv6","start":"2803:160::","prefix":32,"cidr":"2803:160::/32","cc":"BZ","date":"20190710"}]

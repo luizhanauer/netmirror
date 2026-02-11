@@ -1,0 +1,1 @@
+[{"registry":"ripencc","type":"ipv4","start":"69.30.89.0","prefix":24,"cidr":"69.30.89.0/24","cc":"NZ","date":"20030317"},{"registry":"ripencc","type":"ipv4","start":"91.218.78.0","prefix":23,"cidr":"91.218.78.0/23","cc":"NZ","date":"20100706"},{"registry":"ripencc","type":"ipv6","start":"2a09:a380::","prefix":29,"cidr":"2a09:a380::/29","cc":"NZ","date":"20230501"}]

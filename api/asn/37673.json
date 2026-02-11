@@ -1,0 +1,1 @@
+[{"registry":"afrinic","type":"ipv4","start":"41.77.24.0","prefix":21,"cidr":"41.77.24.0/21","cc":"ZA","date":"20110121"},{"registry":"afrinic","type":"ipv4","start":"196.223.56.0","prefix":21,"cidr":"196.223.56.0/21","cc":"ZA","date":"20160728"},{"registry":"afrinic","type":"ipv6","start":"2c0f:49c0::","prefix":32,"cidr":"2c0f:49c0::/32","cc":"ZA","date":"20240829"}]

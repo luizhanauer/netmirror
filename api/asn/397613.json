@@ -1,0 +1,1 @@
+[{"registry":"arin","type":"ipv4","start":"174.128.188.0","prefix":23,"cidr":"174.128.188.0/23","cc":"US","date":"20190711"},{"registry":"arin","type":"ipv6","start":"2602:fdcc::","prefix":36,"cidr":"2602:fdcc::/36","cc":"US","date":"20190618"}]

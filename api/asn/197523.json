@@ -1,0 +1,1 @@
+[{"registry":"ripencc","type":"ipv4","start":"195.20.152.0","prefix":24,"cidr":"195.20.152.0/24","cc":"HU","date":"20110107"},{"registry":"ripencc","type":"ipv6","start":"2001:678:9bc::","prefix":48,"cidr":"2001:678:9bc::/48","cc":"HU","date":"20191209"}]

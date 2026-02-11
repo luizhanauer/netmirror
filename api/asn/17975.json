@@ -1,0 +1,1 @@
+[{"registry":"apnic","type":"ipv4","start":"203.169.32.0","prefix":20,"cidr":"203.169.32.0/20","cc":"HK","date":"20010816"},{"registry":"apnic","type":"ipv4","start":"221.120.176.0","prefix":20,"cidr":"221.120.176.0/20","cc":"HK","date":"20060901"},{"registry":"apnic","type":"ipv6","start":"2407:1b80::","prefix":32,"cidr":"2407:1b80::/32","cc":"HK","date":"20160902"}]
