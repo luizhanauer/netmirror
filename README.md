@@ -17,6 +17,8 @@ Ideal para automação via CLI, scripts de shell ou importação direta em objet
 **Exemplo com `curl`:**
 
 ```bash
+# Requisição via terminal
+
 curl https://luizhanauer.github.io/netmirror/api/asn/28145.txt
 
 ```
@@ -29,6 +31,7 @@ Ideal para desenvolvedores que desejam integrar informações de ASN em seus pr�
 
 ```bash
 # Requisição via terminal
+
 curl https://luizhanauer.github.io/netmirror/api/asn/28145.json
 
 ```
@@ -47,6 +50,52 @@ Você pode utilizar a interface amigável e minimalista para realizar consultas 
 * **Formatadores de CLI:** Gere listas de prefixos prontas para copiar e colar no seu roteador.
 * **Filtros Inteligentes:** Alterne entre visualizações de IPv4 e IPv6.
 * **PWA:** Instale o NetMirror como um aplicativo no seu desktop ou celular para acesso rápido.
+
+---
+
+
+## 🏗️ Arquitetura do Sistema
+
+O projeto utiliza um fluxo desacoplado onde o processamento de dados e a entrega da interface ocorrem de forma independente, garantindo escalabilidade e alta disponibilidade.
+
+```mermaid
+graph TD
+    subgraph "External Data"
+        NRO[NRO Global Stats File]
+    end
+
+    subgraph "GitHub Actions (Automation)"
+        Cron[Cron Schedule 03:00 UTC] --> Go[Go Processor]
+        Push[Push to Main] --> Vite[Vite Build]
+    end
+
+    subgraph "Storage (gh-pages branch)"
+        API[Static JSON/TXT Files]
+        UI[Vue Frontend Assets]
+    end
+
+    subgraph "User Browser"
+        PWA[NetMirror PWA]
+        SW[Service Worker]
+    end
+
+    NRO -- Streaming Download --> Go
+    Go -- Generate & Push --> API
+    Vite -- Build & Push --> UI
+    UI -- Load --> PWA
+    API -- Fetch via Pinia --> PWA
+    PWA -- Caching --> SW
+
+```
+
+---
+
+### 📝 O que este diagrama explica:
+
+* **External Data:** O ponto de partida é o arquivo consolidado do NRO.
+* **GitHub Actions:** Demonstra a separação dos gatilhos (Cron para dados e Push para o código do site).
+* **Storage:** Mostra que tudo reside no branch `gh-pages`, transformando o GitHub Pages em um backend de arquivos estáticos.
+* **User Browser:** Ilustra como o Pinia no Vue.js consome os arquivos `.json` e como o Service Worker lida com o cache para o funcionamento do PWA.
 
 ---
 
