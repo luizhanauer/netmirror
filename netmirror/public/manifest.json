@@ -1,7 +1,7 @@
 {
   "name": "NetMirror Global",
   "short_name": "NetMirror",
-  "start_url": "./",
+  "start_url": "./netmirror",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
