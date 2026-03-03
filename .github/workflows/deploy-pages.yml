@@ -33,23 +33,26 @@ jobs:
 
       - name: Generate and Inject ASN Data
         run: |
-          # 1. Executa a lógica de domínio em Go
+          # Executa a lógica de domínio em Go (Gera arquivos em ./public/api/asn)
           go run main.go
           
-          # 2. Garante que a pasta public do Vue existe e está limpa para receber os dados
-          mkdir -p netmirror/public/api/asn
+          # Cria a estrutura de pastas no Vue
+          mkdir -p netmirror/public/api
           
-          # 3. Move os arquivos gerados na raiz para dentro da estrutura do Vue
-          # Isso faz com que o Vue 'enxergue' esses arquivos como assets estáticos nativos
+          # Remove a pasta de destino caso exista para evitar aninhamento
+          rm -rf netmirror/public/api/asn
+          
+          # Copia a DIRETÓRIO inteiro em vez de usar '*'
+          # Isso evita o erro "Argument list too long"
           if [ -d "public/api/asn" ]; then
-            cp -r public/api/asn/* netmirror/public/api/asn/
-            echo "Dados ASN injetados no diretório public do Vue com sucesso."
+            cp -r public/api/asn netmirror/public/api/
+            echo "Diretório ASN injetado com sucesso."
           else
-            echo "Erro: Os arquivos Go não foram encontrados em public/api/asn"
+            echo "Erro: Diretório de origem public/api/asn não encontrado."
             exit 1
           fi
 
-      # 2. Setup Node e Build do Vue (Agora contendo os dados do Go)
+      # 2. Setup Node e Build do Vue
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -61,8 +64,7 @@ jobs:
           npm ci
           npm run build
           
-      # 3. Injeção de Assets Externos (Portfolio) diretamente no Dist final
-      # Como esses assets não fazem parte do código-fonte do app, injetamos no final
+      # 3. Injeção de Assets do Portfólio
       - name: Inject Portfolio Screenshots
         run: |
           mkdir -p netmirror/dist/assets
@@ -71,7 +73,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      # 4. Upload do Artifact (Apenas a pasta dist do Vue, que já está completa)
+      # 4. Upload e Deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
