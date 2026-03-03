@@ -25,18 +25,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1. Setup e Execução do Go na Raiz
+      # 1. Setup Go e Geração de Dados
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.21'
 
-      - name: Generate ASN Data
+      - name: Generate and Inject ASN Data
         run: |
-          # Executa na raiz, gerando arquivos em ./public/api/asn/
+          # 1. Executa a lógica de domínio em Go
           go run main.go
           
-      # 2. Setup e Build do Vue no subdiretório
+          # 2. Garante que a pasta public do Vue existe e está limpa para receber os dados
+          mkdir -p netmirror/public/api/asn
+          
+          # 3. Move os arquivos gerados na raiz para dentro da estrutura do Vue
+          # Isso faz com que o Vue 'enxergue' esses arquivos como assets estáticos nativos
+          if [ -d "public/api/asn" ]; then
+            cp -r public/api/asn/* netmirror/public/api/asn/
+            echo "Dados ASN injetados no diretório public do Vue com sucesso."
+          else
+            echo "Erro: Os arquivos Go não foram encontrados em public/api/asn"
+            exit 1
+          fi
+
+      # 2. Setup Node e Build do Vue (Agora contendo os dados do Go)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -47,40 +60,22 @@ jobs:
         run: |
           npm ci
           npm run build
-
-      # 3. Consolidação Robusta (Usando caminhos explícitos da raiz)
-      - name: Consolidate Deployment Directory
+          
+      # 3. Injeção de Assets Externos (Portfolio) diretamente no Dist final
+      # Como esses assets não fazem parte do código-fonte do app, injetamos no final
+      - name: Inject Portfolio Screenshots
         run: |
-          # Criamos a pasta final de deploy na raiz
-          mkdir -p deploy-dist
-          
-          # 1. Copia o build do Vue (que está em netmirror/dist)
-          cp -r netmirror/dist/* deploy-dist/
-          
-          # 2. Cria a estrutura da API e copia os dados gerados pelo Go (que estão na raiz/public)
-          mkdir -p deploy-dist/api/asn
-          if [ -d "public/api/asn" ]; then
-            cp -r public/api/asn/* deploy-dist/api/asn/
-          else
-            echo "Erro: pasta public/api/asn não encontrada na raiz!"
-            exit 1
-          fi
-          
-          # 3. Injeção de assets do portfólio
-          mkdir -p deploy-dist/assets
-          cp -r portfolio-assets/* deploy-dist/assets/ || true
-
-      # 4. Debug (Opcional, mas útil para validar se os arquivos estão lá)
-      - name: List files in deploy directory
-        run: ls -R deploy-dist/api/asn/
+          mkdir -p netmirror/dist/assets
+          cp -r portfolio-assets/* netmirror/dist/assets/ || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      # 4. Upload do Artifact (Apenas a pasta dist do Vue, que já está completa)
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './deploy-dist'
+          path: './netmirror/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
