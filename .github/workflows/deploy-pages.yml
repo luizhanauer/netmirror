@@ -1,0 +1,80 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1. Setup e Execução da aplicação Go (Gerador de Dados)
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21' # Ajuste para a versão que você utiliza
+
+      - name: Generate ASN Data
+        run: |
+          go run main.go
+          # Garante que o diretório existe mesmo se o script falhar
+          mkdir -p public/api/asn
+
+      # 2. Setup e Build da aplicação Vue
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          
+      - name: Build Vue App
+        run: |
+          cd netmirror
+          npm ci
+          npm run build
+
+      # 3. Consolidação dos Artefatos (A Mágica acontece aqui)
+      - name: Consolidate Deployment Directory
+        run: |
+          # Criamos uma pasta temporária para organizar o site final
+          mkdir -p deploy-dist
+          
+          # Movemos o build do Vue para a raiz do deploy
+          cp -r netmirror/dist/* deploy-dist/
+          
+          # Criamos a estrutura de API e movemos os arquivos gerados pelo Go
+          mkdir -p deploy-dist/api/asn
+          cp -r public/api/asn/* deploy-dist/api/asn/ || true
+          
+          # Injeção dos Portfolio Screenshots (mantendo sua lógica anterior)
+          mkdir -p deploy-dist/assets
+          cp -r portfolio-assets/* deploy-dist/assets/ || true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 4. Upload do diretório consolidado
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './deploy-dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
